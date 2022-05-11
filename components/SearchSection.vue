@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   name: 'SearchSection',
   data() {
@@ -67,13 +66,9 @@ export default {
   methods: {
     async searchSuggestion() {
       try {
-        const response = await axios.get(
-          'http://localhost:6001/api/user?search=' + this.searchText,
-          {
-            headers: {
-              Authorization: 'Bearer ' + this.$cookies.get('user-token'),
-            },
-          }
+        const response = await this.$store.dispatch(
+          'users/getSearchSuggestion',
+          this.searchText
         )
         this.results = response?.data?.data?.users
       } catch (error) {
@@ -82,17 +77,7 @@ export default {
     },
     async follow(userId) {
       try {
-        await axios.post(
-          'http://localhost:6001/api/user/follow',
-          {
-            userId,
-          },
-          {
-            headers: {
-              Authorization: 'Bearer ' + this.$cookies.get('user-token'),
-            },
-          }
-        )
+        await this.$store.dispatch('users/followUser', userId)
         this.searchSuggestion()
         this.$emit('fetch-tweets')
       } catch (error) {
@@ -101,17 +86,7 @@ export default {
     },
     async unfollow(userId) {
       try {
-        await axios.post(
-          'http://localhost:6001/api/user/unfollow',
-          {
-            userId,
-          },
-          {
-            headers: {
-              Authorization: 'Bearer ' + this.$cookies.get('user-token'),
-            },
-          }
-        )
+        await this.$store.dispatch('users/unfollowUser', userId)
         this.searchSuggestion()
         this.$emit('fetch-tweets')
       } catch (error) {

@@ -33,7 +33,6 @@
 <script>
 import LoginComponent from './Login.vue'
 import RegisterComponent from './Register.vue'
-import axios from 'axios'
 
 export default {
   name: 'LandingComponent',
@@ -46,11 +45,7 @@ export default {
   methods: {
     async login(userData) {
       try {
-        const response = await axios.post(
-          'http://localhost:6001/api/user/login',
-          userData
-        )
-        debugger
+        const response = await this.$store.dispatch('users/login', userData)
         this.$cookies.set('user-token', response?.data?.data?.token)
         this.$store.dispatch('users/updateUser', response?.data?.data?.user)
         this.$router.push('/dashboard')
@@ -61,10 +56,7 @@ export default {
     },
     async signup(userData) {
       try {
-        const response = await axios.post(
-          'http://localhost:6001/api/user/signup',
-          userData
-        )
+        const response = await this.$store.dispatch('users/signup', userData)
         this.$cookies.set('user-token', response?.data?.data?.token)
         this.$store.dispatch('users/updateUser', response?.data?.data?.user)
         this.$router.push('/dashboard')

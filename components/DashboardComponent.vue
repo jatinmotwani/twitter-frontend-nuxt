@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import SidebarComponent from './Sidebar.vue'
 import TweetSection from './TweetSection.vue'
 import SearchSection from './SearchSection.vue'
@@ -28,11 +27,7 @@ export default {
   methods: {
     async getPosts() {
       try {
-        const response = await axios.get('http://localhost:6001/api/post', {
-          headers: {
-            Authorization: 'Bearer ' + this.$cookies.get('user-token'),
-          },
-        })
+        const response = await this.$store.dispatch('tweets/fetchPosts')
         this.$store.dispatch('tweets/updateTweets', response?.data?.data?.posts)
         this.tweets = response?.data?.data?.posts || []
       } catch (error) {

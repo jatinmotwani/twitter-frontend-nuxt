@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   name: 'TweetSection',
   data() {
@@ -58,21 +57,10 @@ export default {
   methods: {
     async addTweet() {
       try {
-        await axios.post(
-          'http://localhost:6001/api/post/create',
-          {
-            content: this.tweetContent,
-          },
-          {
-            headers: {
-              Authorization: 'Bearer ' + this.$cookies.get('user-token'),
-            },
-          }
-        )
+        await this.$store.dispatch('tweets/addTweet', this.tweetContent)
         this.tweetContent = ''
         this.fetchTweets()
       } catch (error) {
-        ß
         alert(error?.data?.data?.message)
       }
     },
